@@ -8,6 +8,53 @@ import userImg from "../../assets/user.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../transactions/style.scss"
 import { logout } from '../../actions/userActions';
+import { deposit, withdrawal, transfer, saldo, } from '../../actions/transactionActions';
+
+const [amountDeposit, setAmountDeposit] = useState("");
+const [descDeposit, setDescDeposit] = useState("");
+const [amountWithdrawal, setAmountWithdrawal] = useState("");
+const [descWithdrawal, setDescWithdrawal] = useState("");
+const [accountTransfer, setAccountTransfer] = useState("");
+const [amountTransfer, setAmountTransfer] = useState("");
+const [descTransfer, setDescTransfer] = useState("");
+
+
+useEffect(() => {
+  setAmountDeposit("");
+  setDescDeposit("");
+  setAmountWithdrawal("");
+  setDescWithdrawal("");
+  setAccountTransfer("");
+  setAmountTransfer("");
+  setDescTransfer("");
+}, [])
+
+useEffect(() => {
+  if (token) {
+    dispatch(saldo())
+  }
+}, [dispatch, history, token])
+
+const transactionSaldo = useSelector((state) => state.transactionSaldo)
+const { saldoTotal } = transactionSaldo
+const accountDeposit = saldoTotal?.account?.account_number
+const accountWithdrawal = saldoTotal?.account?.account_number
+const accountTransferSender = saldoTotal?.account?.account_number
+
+const submitDepositHandler = (e) => {
+  e.preventDefault();
+  dispatch(deposit(accountDeposit, amountDeposit, descDeposit));
+}
+const submitWithdrawalHandler = (e) => {
+  e.preventDefault();
+  dispatch(withdrawal(accountWithdrawal, amountWithdrawal, descWithdrawal));
+
+}
+const submitTransferHandler = (e) => {
+  e.preventDefault();
+  dispatch(transfer(accountTransfer, accountTransferSender, amountTransfer, descTransfer));
+
+}
 
 const Transactions = ({ history }) => {
   const dispatch = useDispatch();
@@ -20,7 +67,7 @@ const Transactions = ({ history }) => {
   return (
     <Container>
       <Tabs>
-        <Navbar bg="light">
+        <Navbar bg="dark">
           <Navbar.Collapse>
             <Navbar.Brand>
               <img
@@ -53,22 +100,33 @@ const Transactions = ({ history }) => {
         </Navbar>
         <TabList>
           <Tab>Deposit</Tab>
+          <div className="mb-5">
+            <h4>Total Saldo : {saldoTotal != null && saldoTotal.account ? saldoTotal.account.saldo : 0}</h4>
+          </div>
           <Tab>Withdraw</Tab>
+          <div className="mb-5">
+            <h4>Total Saldo : {saldoTotal != null && saldoTotal.account ? saldoTotal.account.saldo : 0}</h4>
+          </div>
           <Tab>Transfer</Tab>
+          <div className="mb-5">
+            <h4>Total Saldo : {saldoTotal != null && saldoTotal.account ? saldoTotal.account.saldo : 0}</h4>
+          </div>
           <Tab>Mutasi Rekening</Tab>
         </TabList>
         <TabPanel>
           <div className="d-flex justify-content-center my-4">
             <h1>DEPOSIT</h1>
           </div>
-          <Form className="mt-3">
-            <Form.Group as={Row} controlId="formPlaintextAmount">
+          <Form className="mt-3" onSubmit={submitDepositHandler} >
+            <Form.Group as={Row} controlId="formPlaintextAmount" >
               <Form.Label column sm="2">
                 Total Amount
               </Form.Label>
               <Col sm="10">
                 <Form.Control 
                   type="amount" 
+                  value={amountDeposit}
+                  onChange={(e)=> setAmountDeposit(e.target.value)}
                   placeholder="Input the amount" />
               </Col>
             </Form.Group>
@@ -84,7 +142,7 @@ const Transactions = ({ history }) => {
               </Col>
             </Form.Group>
             <Col sm={{ span: 10, offset: 11 }}>
-              <Button variant="danger" type="submit">
+              <Button variant="danger" type="submit" >
                 Send
               </Button>
             </Col>
@@ -94,7 +152,7 @@ const Transactions = ({ history }) => {
           <div className="d-flex justify-content-center my-4">
             <h1>WITHDRAWAL</h1>
           </div>
-          <Form className="mt-3">
+          <Form className="mt-3" onSubmit={submitWithdrawalHandler}>
             <Form.Group as={Row} controlId="formPlaintextAmountWithdraw">
               <Form.Label column sm="2">
                 Total Amount
@@ -102,6 +160,8 @@ const Transactions = ({ history }) => {
               <Col sm="10">
                 <Form.Control 
                   type="amount" 
+                  value={amountDeposit}
+                  onChange={(e)=> setAmountDeposit(e.target.value)}
                   placeholder="Input the amount" 
                 />
               </Col>
@@ -121,7 +181,7 @@ const Transactions = ({ history }) => {
               </Col>
             </Form.Group>
             <Col sm={{ span: 10, offset: 11 }}>
-              <Button variant="danger" type="submit">
+              <Button variant="danger" type="submit" >
                 Withdraw
               </Button>
             </Col>
@@ -131,7 +191,7 @@ const Transactions = ({ history }) => {
           <div className="d-flex justify-content-center my-4">
             <h1>TRANSFER</h1>
           </div>
-          <Form className="mt-3">
+          <Form className="mt-3"  onSubmit={submitTransferHandler}>
             <Form.Group as={Row} controlId="formPlaintextRecepient">
               <Form.Label column sm="2">
                 Recepient
@@ -150,6 +210,8 @@ const Transactions = ({ history }) => {
               <Col sm="10">
                 <Form.Control 
                   type="amount" 
+                  value={amountDeposit}
+                  onChange={(e)=> setAmountDeposit(e.target.value)}
                   placeholder="Input the amount" 
                 />
               </Col>
