@@ -9,6 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../transactions/style.scss"
 import { logout } from '../../actions/userActions';
 import { deposit, withdrawal, transfer, saldo, } from '../../actions/transactionActions';
+import Table from 'react-bootstrap/Table'
 
 const Transactions = ({ history }) => {
   const dispatch = useDispatch();
@@ -257,6 +258,42 @@ const submitTransferHandler = (e) => {
           </Form>
         </TabPanel>
         <TabPanel>
+        <div className="d-flex justify-content-center my-4">
+            <h1>MUTASI REKENING</h1>
+          </div>
+          <Table responsive>
+  <thead>
+    <tr>
+      <th>No.</th>
+      
+                <th >Transaction Type</th>
+                <th >Sender</th>
+                <th >Amount</th>
+                <th >Recipient</th>
+                <th >Date</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+     
+        <td > </td>
+      
+    </tr>
+    <tr>
+      <td>2</td>
+     
+        <td > </td>
+     
+    </tr>
+    <tr>
+      <td>3</td>
+      
+        <td ></td>
+          </tr>
+  </tbody>
+</Table>
           {/* isi code mutasi rekening disini */}
         </TabPanel>
       </Tabs>
